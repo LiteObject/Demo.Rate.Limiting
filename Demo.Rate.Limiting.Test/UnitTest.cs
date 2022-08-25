@@ -12,8 +12,7 @@ namespace Demo.Rate.Limiting.Test
     {
         private readonly ITestOutputHelper _output;
 
-        public UnitTest(ITestOutputHelper output) => _output = output ?? throw new ArgumentNullException($"{nameof(output)} cannot be null.");
-
+        public UnitTest(ITestOutputHelper output) => _output = output;
 
         [Fact]
         public async Task Should_Reject_Five_Req_In_Five_Secs()
@@ -26,10 +25,6 @@ namespace Demo.Rate.Limiting.Test
             var options = new DbContextOptionsBuilder<RequestDbContext>()
             .UseInMemoryDatabase(databaseName: "MyTestDb")
             .Options;
-
-            /*using var context = new RequestDbContext(options);
-            await context.Requests.AddAsync(existingRecord);
-            await context.SaveChangesAsync(); */
 
             var contextFactoryMock = new Mock<IDbContextFactory<RequestDbContext>>();
             contextFactoryMock
@@ -52,7 +47,6 @@ namespace Demo.Rate.Limiting.Test
             };
 
             // ACT
-            // await rule.AddRequestRecordAsync(existingRecord);
             var reject = await rule.RejectAsync(token);
 
             _output.WriteLine($"Reject? {reject}");

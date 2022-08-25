@@ -26,7 +26,7 @@ namespace Demo.Api.Rules
 
             if (elapsed.TotalSeconds <= TimeSpanInSec && request.Count >= MaxReqCount)
             {
-                Console.WriteLine($">>> REJECTED. Current Time: {DateTime.Now}, Last Req Time: {request.Last}, Elapsed {elapsed.TotalSeconds} s., Req Count: {request.Count}");
+                Console.WriteLine($">>> REJECTED. Current Time: {DateTime.Now}, First Req Time: {request.First}, Elapsed {elapsed.TotalSeconds} s., Req Count: {request.Count}");
                 return true;
             }
 
