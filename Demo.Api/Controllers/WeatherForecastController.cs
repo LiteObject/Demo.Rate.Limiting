@@ -1,0 +1,38 @@
+using Demo.Api.Attributes;
+using Demo.Api.Rules;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Demo.Api.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
+    {
+        private static readonly string[] Summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
+        private readonly ILogger<WeatherForecastController> _logger;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+        }
+
+        // One or more rule canbe assigned
+        [RateLimiter(RateLimitingRule = typeof(RateLimitingRuleForUS), MaxReqCount = 5, TimeSpanInSec = 30)]
+        [RateLimiter(RateLimitingRule = typeof(RateLimitingRuleForEU))]
+        [HttpGet(Name = "GetWeatherForecast")]
+        public IEnumerable<WeatherForecast> Get()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+    }
+}
